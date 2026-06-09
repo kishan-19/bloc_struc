@@ -1,3 +1,4 @@
+import 'package:bloc_struc/route/app_route.dart';
 import 'package:bloc_struc/screen/list/list_screen.dart';
 import 'package:bloc_struc/screen/login/bloc/login_bloc.dart';
 import 'package:bloc_struc/screen/login/bloc/login_event.dart';
@@ -7,6 +8,7 @@ import 'package:bloc_struc/widgets/SmartTextInputWidget.dart';
 import 'package:bloc_struc/widgets/coommon_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -46,7 +48,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                   if(state is LoginSuccess){
                     showSnackBar("Login Success", context);
-                    startActivity(context, ListScreen());
+                    // startActivity(context, ListScreen());
+                    context.go(AppRoute.user);
                   }
                 },
                 builder: (context, state) {

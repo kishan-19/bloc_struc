@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "374666296461",
+    "project_id": "bloc-struc",
+    "storage_bucket": "bloc-struc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:374666296461:android:b650e03a13700f868cf6c4",
+        "android_client_info": {
+          "package_name": "com.example.bloc_struc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZlpFZkbc00ddDj_3SFrTRk68t9ngWvSY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
