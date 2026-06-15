@@ -5,28 +5,68 @@ import 'package:bloc_struc/screen/login/bloc/login_bloc.dart';
 import 'package:bloc_struc/screen/user/bloc/user_bloc.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart' show RemoteMessage, FirebaseMessaging;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import 'constant/global_context.dart';
 import 'database/user/model/user_model.dart';
 import 'database/user/user_service.dart';
 import 'firebase_options.dart';
+import 'service/PushNotificationService.dart';
 import 'utiles/util.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print("<><> _firebaseMessagingBackgroundHandler MAIN : ${message.data.toString()}");
+  message.data.forEach((key, value) {
+
+    if (key == "id")
+    {
+      NavigationService.notif_id = value;
+    }
+
+    if(NavigationService.notif_id.isEmpty)
+    {
+      if (key == "content_id") {
+        NavigationService.notif_id = value;
+      }
+    }
+
+    if (key == "content_type")
+    {
+      NavigationService.notif_type = value;
+    }
+  });
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  PaintingBinding.instance.imageCache.maximumSizeBytes = 1000 << 40; // for increase the cache memory
+  await PushNotificationService().setupInteractedMessage();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestExactAlarmsPermission();
+
+
 
   /// INIT HIVE
   await Hive.initFlutter();
-
   Hive.registerAdapter(UserModelAdapter());
   await Hive.openBox<UserModel>(HiveService.boxName);
 
+  fetDeviceFCMToken();
   runApp(const MyApp());
 }
+
+ fetDeviceFCMToken() async {
+   String? token = await FirebaseMessaging.instance.getToken();
+   print("<><> FCM TOKEN === $token");
+ }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
