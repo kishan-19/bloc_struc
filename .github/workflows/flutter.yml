@@ -17,12 +17,12 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-            flutter-version: 3.38.7
+            flutter-version: 3.44.2
 
       - name: Install Dependencies
         run: flutter pub get
 
-      - name: Analyze Project
+      - name: Build APK
         run: flutter build apk --release
 
       - uses: actions/upload-artifact@v4
